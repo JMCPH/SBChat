@@ -9,6 +9,7 @@ target 'SBChat' do
     # Pods for SBChat
     pod 'MessageKit', :git => 'https://github.com/MessageKit/MessageKit'
     pod 'Firebase/Database'
+    pod 'Firebase/Firestore'
     pod 'Firebase/Auth'
     pod 'Firebase/Storage'
 
