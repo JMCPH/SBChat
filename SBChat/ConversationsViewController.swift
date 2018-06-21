@@ -11,6 +11,7 @@ import FirebaseDatabase
 
 class ConversationsViewController: UITableViewController {
 
+    let chatRoomWorker = ChatRoomWorker()
     var currentUserID: String = "1"
     var allUserIDs = ["1", "2", "3", "4", "5"]
 
@@ -60,16 +61,15 @@ class ConversationsViewController: UITableViewController {
             let action = UIAlertAction(title: userID, style: .default) { [weak self] (action) in
                 guard let selectedUserID = action.title else { return }
                 guard let currentUserID = self?.currentUserID else { return }
-                guard currentUserID != selectedUserID else {
-                    debugPrint("ERROR - Choose another userID yours!")
+                guard currentUserID != selectedUserID else { return }
+
+                // Generate the ChatRoomID for the two users
+                guard let chatRoomID = self?.chatRoomWorker.generateChatRoomID(withUserID: selectedUserID, currentUserID: currentUserID) else {
+                    assert(true)
                     return
                 }
 
-                // Create ChatRoomID if
-                if let chatRoomID = self?.getPrivateChatRoomIDString(withUserID: selectedUserID) {
-                    self?.createPrivateChatRoom(withID: chatRoomID)
-                }
-
+                // Open a ChatViewController with this roomID
 
             }
             alert.addAction(action)
@@ -79,35 +79,9 @@ class ConversationsViewController: UITableViewController {
 
     }
 
-    // Setup the ChatRoomID -  We will be ordering userIDs 'lexicographically' in the compound key globally
-    fileprivate func getPrivateChatRoomIDString(withUserID userID: String) -> String? {
-        var chatRoomID: String?
-        if currentUserID.lexicographicallyPrecedes(userID) {
-            chatRoomID = currentUserID + "_" + userID
-        } else {
-            chatRoomID = userID + "_" + currentUserID
-        }
-        return chatRoomID
-    }
+    fileprivate func createChatRoom(withID roomID: String, openChatAfter: Bool) {
 
-    fileprivate func createPrivateChatRoom(withID roomID: String) {
-
-        // Call firebase and move to the ChatViewController aftwards
-        let chatRoomsRef = Database.database().reference().child("Chat").child("Rooms")
-
-        // If the RoomID already exists - don't do anything
-        chatRoomsRef.child(roomID).observeSingleEvent(of: .value, with: { (snapshot) in
-
-            if snapshot.exists() {
-
-                // Just open the ChatViewController for this room :-)
-
-            } else {
-
-                
-            }
-        })
-
+        self.chatRoomWorker
 
     }
 

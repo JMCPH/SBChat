@@ -18,6 +18,7 @@
 		364D2CE720B8AA0D00218178 /* ChatConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CE520B8AA0D00218178 /* ChatConversation.swift */; };
 		364D2CE820B8AA0D00218178 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CE620B8AA0D00218178 /* ChatMessage.swift */; };
 		364D2CEA20B8B12000218178 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 364D2CE920B8B12000218178 /* GoogleService-Info.plist */; };
+		36656E7220DADBEE004A775A /* ChatRoomWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36656E7120DADBEE004A775A /* ChatRoomWorker.swift */; };
 		36958A8620B894B800A55950 /* DesignUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36958A8520B894B800A55950 /* DesignUtils.swift */; };
 		36DA709C20BDAE9D00DA675F /* ChatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA709620BDAE9D00DA675F /* ChatPresenter.swift */; };
 		36DA709D20BDAE9D00DA675F /* ChatWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA709720BDAE9D00DA675F /* ChatWorker.swift */; };
@@ -67,6 +68,7 @@
 		364D2CE520B8AA0D00218178 /* ChatConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatConversation.swift; sourceTree = "<group>"; };
 		364D2CE620B8AA0D00218178 /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		364D2CE920B8B12000218178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		36656E7120DADBEE004A775A /* ChatRoomWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomWorker.swift; sourceTree = "<group>"; };
 		36958A8520B894B800A55950 /* DesignUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DesignUtils.swift; sourceTree = "<group>"; };
 		36DA709620BDAE9D00DA675F /* ChatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPresenter.swift; sourceTree = "<group>"; };
 		36DA709720BDAE9D00DA675F /* ChatWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWorker.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 		361D7DC820B853DC00A694C8 /* SBChat */ = {
 			isa = PBXGroup;
 			children = (
+				36656E7120DADBEE004A775A /* ChatRoomWorker.swift */,
 				36958A8520B894B800A55950 /* DesignUtils.swift */,
 				361D7DC920B853DC00A694C8 /* AppDelegate.swift */,
 				364D2CDF20B8A45000218178 /* ConversationsViewController.swift */,
@@ -450,6 +453,7 @@
 			files = (
 				36958A8620B894B800A55950 /* DesignUtils.swift in Sources */,
 				364D2CE820B8AA0D00218178 /* ChatMessage.swift in Sources */,
+				36656E7220DADBEE004A775A /* ChatRoomWorker.swift in Sources */,
 				364D2CDB20B8A39400218178 /* FirebaseDriver.swift in Sources */,
 				36DA709F20BDAE9D00DA675F /* ChatModels.swift in Sources */,
 				36DA709D20BDAE9D00DA675F /* ChatWorker.swift in Sources */,

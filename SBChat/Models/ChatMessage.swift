@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import MessageKit
+import FirebaseDatabase
 
 private struct MockMediaItem: MediaItem {
 

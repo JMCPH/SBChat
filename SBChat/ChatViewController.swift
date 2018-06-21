@@ -26,6 +26,10 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 
     var messageList = [ChatMessage]()
 
+    // ChatRoom related
+    var roomID: String!
+    var currentUserID: String!
+    var otherUserID: String!
 
     // MARK: Object lifecycle
 
@@ -67,6 +71,14 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
                 router.perform(selector, with: segue)
             }
         }
+    }
+
+    override func loadView() {
+
+        // Remember - don't call anything UI related, as it has not been setup yet.
+
+        // Load the messages for this ChatRoomID - Background thread!
+
     }
 
     // MARK: View lifecycle
