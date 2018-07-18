@@ -16,27 +16,29 @@ import MessageKit
 
 protocol ChatDisplayLogic: class
 {
-    func displaySomething(viewModel: Chat.Something.ViewModel)
+    func displaySendMessage(viewModel: Chat.Send.ViewModel)
 }
 
 class ChatViewController: MessagesViewController, ChatDisplayLogic
 {
+
     var interactor: ChatBusinessLogic?
     var router: (NSObjectProtocol & ChatRoutingLogic & ChatDataPassing)?
 
-    var messageList = [ChatMessage]()
+    fileprivate var messageList = [ChatMessage]()
 
     // ChatRoom related
-    var roomID: String!
-    var currentUserID: String!
-    var otherUserID: String!
+    fileprivate var room: ChatRoom!
+    fileprivate var currentUserID: String!
+
 
     // MARK: Object lifecycle
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-    {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setup()
+    init(withRoom room: ChatRoom, currentUserID: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.room = room
+        self.currentUserID = currentUserID
+        self.setup()
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -47,8 +49,7 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 
     // MARK: Setup
 
-    private func setup()
-    {
+    private func setup() {
         let viewController = self
         let interactor = ChatInteractor()
         let presenter = ChatPresenter()
@@ -71,14 +72,6 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
                 router.perform(selector, with: segue)
             }
         }
-    }
-
-    override func loadView() {
-
-        // Remember - don't call anything UI related, as it has not been setup yet.
-
-        // Load the messages for this ChatRoomID - Background thread!
-
     }
 
     // MARK: View lifecycle
@@ -186,7 +179,6 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 
             // Display to UI on main thread
             DispatchQueue.main.async {
-
                 self.messageList = messages
                 self.messagesCollectionView.reloadData()
                 self.messagesCollectionView.scrollToBottom()
@@ -194,14 +186,13 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 
         }
 
-        let request = Chat.Something.Request()
-        interactor?.doSomething(request: request)
     }
 
-    func displaySomething(viewModel: Chat.Something.ViewModel)
-    {
-        //nameTextField.text = viewModel.name
+
+    func displaySendMessage(viewModel: Chat.Send.ViewModel) {
+
     }
+
 
 }
 
@@ -222,7 +213,7 @@ extension ChatViewController: MessagesDataSource {
     }
 
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        if indexPath.section % 3 == 0 {
+        if indexPath.section % 5 == 0 {
             return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedStringKey.foregroundColor: UIColor.darkGray])
         }
         return nil
@@ -249,7 +240,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     // MARK: - Text Messages
 
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? .white : .darkText
+        return .white
     }
 
     func detectorAttributes(for detector: DetectorType, and message: MessageType, at indexPath: IndexPath) -> [NSAttributedStringKey: Any] {
@@ -274,6 +265,9 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+
+        // *** Load the avatar of the user here - placeholder? ***
+
         //let avatar = SampleData.shared.getAvatarFor(sender: message.sender)
         //avatarView.set(avatar: avatar)
     }
@@ -370,21 +364,30 @@ extension ChatViewController: MessageInputBarDelegate {
             if let image = component as? UIImage {
 
                 let imageMessage = ChatMessage(image: image, sender: currentSender(), messageId: UUID().uuidString, date: Date())
+
+                // Send ChatMessage to the interactor
+                let request = Chat.Send.Request(message: imageMessage, room: room)
+                interactor?.sendMessage(request: request)
+
                 messageList.append(imageMessage)
                 messagesCollectionView.insertSections([messageList.count - 1])
 
             } else if let text = component as? String {
 
-                let attributedText = NSAttributedString(string: text, attributes: [.font: UIFont.systemFont(ofSize: 15), .foregroundColor: UIColor.blue])
+                let message = ChatMessage(text: text, sender: currentSender(), messageId: "", date: Date())
 
-                let message = ChatMessage(attributedText: attributedText, sender: currentSender(), messageId: UUID().uuidString, date: Date())
+                // Send ChatMessage to the interactor
+                let request = Chat.Send.Request(message: message, room: room)
+                interactor?.sendMessage(request: request)
+
                 messageList.append(message)
                 messagesCollectionView.insertSections([messageList.count - 1])
+
             }
 
         }
 
-        inputBar.inputTextView.text = String()
+        inputBar.inputTextView.text = ""
         messagesCollectionView.scrollToBottom()
     }
 

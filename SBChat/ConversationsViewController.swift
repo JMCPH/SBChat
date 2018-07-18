@@ -65,11 +65,17 @@ class ConversationsViewController: UITableViewController {
 
                 // Generate the ChatRoomID for the two users
                 guard let chatRoomID = self?.chatRoomWorker.generateChatRoomID(withUserID: selectedUserID, currentUserID: currentUserID) else {
-                    assert(true)
+                    debugPrint("Error - Can't chat with the same user!")
                     return
                 }
 
-                // Open a ChatViewController with this roomID
+                // Open the ChatRoomVC with roomID
+                DispatchQueue.main(delay: 0.0, main: {
+                    let users = [ChatUser(withID: currentUserID, name: currentUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(currentUserID).jpg"),
+                                 ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")]
+                    let chatRoom = ChatRoom(withID: chatRoomID, users: users)
+                    self?.openChatRoom(withID: chatRoom)
+                }, completion: nil)
 
             }
             alert.addAction(action)
@@ -79,15 +85,16 @@ class ConversationsViewController: UITableViewController {
 
     }
 
-    fileprivate func createChatRoom(withID roomID: String, openChatAfter: Bool) {
-
-        self.chatRoomWorker
-
+    fileprivate func openChatRoom(withID chatRoom: ChatRoom) {
+        debugPrint("Open a ChatViewController with RoomID: \(chatRoom.id)")
+        let chatVC = ChatViewController(withRoom: chatRoom, currentUserID: currentUserID)
+        self.navigationController?.pushViewController(chatVC, animated: true)
     }
 
     fileprivate func fetchConversations(forUserID userID: String) {
 
         // Loading conversations from this userID
+
         
 
     }

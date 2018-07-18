@@ -16,16 +16,20 @@ enum Chat
 {
     // MARK: Use cases
 
-    enum Something
+    enum Send
     {
         struct Request
         {
+            let message: ChatMessage
+            let room: ChatRoom
         }
         struct Response
         {
+            let error: Error?
         }
         struct ViewModel
         {
+            let error: Error?
         }
     }
 }

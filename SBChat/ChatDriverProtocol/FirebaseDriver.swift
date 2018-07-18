@@ -7,17 +7,27 @@
 //
 
 import UIKit
+import MessageKit
 import FirebaseDatabase
 
 class FirebaseDriver {
 
-    var chatRoomsRef = Database.database().reference().child("Chat").child("Rooms")
-    var chatMessagesRef = Database.database().reference().child("Chat").child("Messages")
+    var chatRoomsRef = Database.database().reference().child("chat").child("rooms")
+    var chatRecentsRef = Database.database().reference().child("chat").child("recentMessages")
 
-    public func fetchChatConversationsForUserID(userID: String, onSucces: @escaping ([ChatConversation]) -> Void, onError: Error?) {
+    public func fetchChatConversationsForUserID(userID: String, onSucces: @escaping ([ChatRoom]) -> Void, onError: Error?) {
+
+        chatRoomsRef.queryStarting(atValue: userID).observeSingleEvent(of: .value) { (snapshot) in
+            print(snapshot.children.allObjects)
+        }
+
+        chatRoomsRef.queryEnding(atValue: userID).observeSingleEvent(of: .value) { (snapshot) in
+            print(snapshot.children.allObjects)
+        }
 
     }
 
+    /*
     public func createChatRoom(withUserIDs userIDs: [String], withMessage message: ChatMessage, completion: @escaping (_ success: Error?) -> Void) {
 
         let chatRoomData = ["members": userIDs,
@@ -26,46 +36,71 @@ class FirebaseDriver {
 
         // Send chat room to firebase
         chatRoomsRef.childByAutoId().updateChildValues(chatRoomData) { (error, ref) in
-
-
             completion(error)
         }
+    } */
+    
+    public func sendMessage(message: ChatMessage, forChatRoom chatRoom: ChatRoom, completion: @escaping (_ error: Error?) -> Void) {
+
+        switch message.kind {
+
+            case .text(let value):
+
+                // 1. Send Message
+                let messageValue = [
+                                    "senderName" : message.sender.displayName,
+                                    "senderID" : message.sender.id,
+                                    "timestamp": message.sentDate.timeIntervalSince1970,
+                                    "type" : "text",
+                                    "value" : value] as [String : Any]
+                chatRoomsRef.child(chatRoom.id).childByAutoId().setValue(messageValue) { [weak self] (error, ref) in
+                    if let err = error {
+                        completion(err)
+                        return
+                    }
+
+                    // 2. Update the recentMessages for ALL members of the chat
+                    self?.updateRecentMessages(forChatRoom: chatRoom, messageText: value, senderID: message.sender.id)
+
+                    // 3. Send out push notifications to everyone
+                }
+
+        default:
+            debugPrint("Not supporting this type of message yet")
+        }
+
     }
 
-    public func createMessage(withMessage message: ChatMessage, forRoomID roomID: String, completion: @escaping (_ success: Error?) -> Void) {
+    fileprivate func updateRecentMessages(forChatRoom chatRoom: ChatRoom, messageText: String, senderID: String) {
 
-        /*
+        for user in chatRoom.users {
 
-        chatMessagesRef.childByAutoId().setValue(<#T##value: Any?##Any?#>, withCompletionBlock: <#T##(Error?, DatabaseReference) -> Void#>)
-        Database.database().reference().child("users").child(currentUserID).child("conversations").child(toID).observeSingleEvent(of: .value, with: { (snapshot) in
-            if snapshot.exists() {
-                let data = snapshot.value as! [String: String]
-                let location = data["location"]!
-                Database.database().reference().child("conversations").child(location).childByAutoId().setValue(withValues, withCompletionBlock: { (error, _) in
-                    if error == nil {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                })
-            } else {
-                Database.database().reference().child("conversations").childByAutoId().childByAutoId().setValue(withValues, withCompletionBlock: { (error, reference) in
-                    let data = ["location": reference.parent!.key]
-                    Database.database().reference().child("users").child(currentUserID).child("conversations").child(toID).updateChildValues(data)
-                    Database.database().reference().child("users").child(toID).child("conversations").child(currentUserID).updateChildValues(data)
-                    completion(true)
-                })
+            guard let otherUser = chatRoom.users.first(where: { $0.id != user.id }) else { return }
+
+            // Update the recentMessage
+            let latestMessage = ["timestamp": ServerValue.timestamp() as Any,
+                                 "latestMessage" : messageText,
+                                 "lastSenderID": senderID,
+                                 "userID": user.id,
+                                 "roomID": chatRoom.id,
+                                 "otherUsername": otherUser.name,
+                                 "otherUserID": otherUser.id,
+                                 "otherUserImageURL": otherUser.imageURL] as [String : Any]
+
+            chatRecentsRef.queryOrdered(byChild: "userID").queryEqual(toValue: user.id).observeSingleEvent(of: .value) { [weak self] (snapshot) in
+
+                if let childValue = snapshot.value as? [String: Any], let path = childValue.keys.first {
+                    self?.chatRecentsRef.child(path).updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
+
+                    })
+                } else {
+                    self?.chatRecentsRef.childByAutoId().updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
+                        ref.updateChildValues(["recentID" : ref.key])
+                    })
+                }
+
             }
-        })
-
-        // Send to firebase
-        chatRef.childByAutoId().updateChildValues(chatRoomData) { (error, ref) in
-
-
-            completion(error)
         }
-
-         */
     }
 
 }

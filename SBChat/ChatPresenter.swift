@@ -14,7 +14,7 @@ import UIKit
 
 protocol ChatPresentationLogic
 {
-    func presentSomething(response: Chat.Something.Response)
+    func presentSendMessage(response: Chat.Send.Response)
 }
 
 class ChatPresenter: ChatPresentationLogic
@@ -23,10 +23,10 @@ class ChatPresenter: ChatPresentationLogic
 
     // MARK: Do something
 
-    func presentSomething(response: Chat.Something.Response)
+    func presentSendMessage(response: Chat.Send.Response)
     {
-        let viewModel = Chat.Something.ViewModel()
-        viewController?.displaySomething(viewModel: viewModel)
+        let viewModel = Chat.Send.ViewModel(error: response.error)
+        viewController?.displaySendMessage(viewModel: viewModel)
     }
 }
 

@@ -14,7 +14,7 @@ import UIKit
 
 protocol ChatBusinessLogic
 {
-    func doSomething(request: Chat.Something.Request)
+    func sendMessage(request: Chat.Send.Request)
 }
 
 protocol ChatDataStore
@@ -26,17 +26,15 @@ class ChatInteractor: ChatBusinessLogic, ChatDataStore
 {
     var presenter: ChatPresentationLogic?
     var worker: ChatWorker?
-    //var name: String = ""
 
-    // MARK: Do something
-
-    func doSomething(request: Chat.Something.Request)
+    // MARK: Send Message
+    func sendMessage(request: Chat.Send.Request)
     {
         worker = ChatWorker()
-        worker?.doSomeWork()
-
-        let response = Chat.Something.Response()
-        presenter?.presentSomething(response: response)
+        worker?.sendMessage(message: request.message, chatRoom: request.room, completion: { [weak self] (error) in
+            let response = Chat.Send.Response(error: error)
+            self?.presenter?.presentSendMessage(response: response)
+        })
     }
 }
 

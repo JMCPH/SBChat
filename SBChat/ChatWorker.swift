@@ -11,11 +11,23 @@
 //
 
 import UIKit
+import MessageKit
 
-class ChatWorker
-{
-    func doSomeWork()
-    {
+class ChatWorker {
+
+    let currentDriver = FirebaseDriver()
+
+    /// Send message to roomID
+    func sendMessage(message: ChatMessage, chatRoom: ChatRoom, completion: @escaping (_ error: Error?) -> Void) {
+        currentDriver.sendMessage(message: message, forChatRoom: chatRoom) { (error) in
+            completion(error)
+        }
     }
+
+    /// Fetch messages for roomID
+    func fetchMessages(forRoomID roomID: String, completion: @escaping (_ chatMessages: [ChatMessage], _ error: Error?) -> Void) {
+
+    }
+
 }
 

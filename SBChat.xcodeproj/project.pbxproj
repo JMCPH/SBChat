@@ -7,15 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3618E8B220E02D010023E176 /* DispatchQueue+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3618E8B120E02D010023E176 /* DispatchQueue+Extensions.swift */; };
 		361D7DCA20B853DC00A694C8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D7DC920B853DC00A694C8 /* AppDelegate.swift */; };
 		361D7DD120B853DD00A694C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 361D7DD020B853DD00A694C8 /* Assets.xcassets */; };
 		361D7DD420B853DD00A694C8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 361D7DD220B853DD00A694C8 /* LaunchScreen.storyboard */; };
 		361D7DDF20B853DE00A694C8 /* SBChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D7DDE20B853DE00A694C8 /* SBChatTests.swift */; };
 		361D7DEA20B853DE00A694C8 /* SBChatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361D7DE920B853DE00A694C8 /* SBChatUITests.swift */; };
+		363EEE6F20FFD71C005A99DD /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363EEE6E20FFD71C005A99DD /* ChatUser.swift */; };
 		364D2CDB20B8A39400218178 /* FirebaseDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CDA20B8A39400218178 /* FirebaseDriver.swift */; };
 		364D2CDD20B8A3B200218178 /* ChatDriverProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CDC20B8A3B200218178 /* ChatDriverProtocol.swift */; };
 		364D2CE020B8A45000218178 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CDF20B8A45000218178 /* ConversationsViewController.swift */; };
-		364D2CE720B8AA0D00218178 /* ChatConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CE520B8AA0D00218178 /* ChatConversation.swift */; };
+		364D2CE720B8AA0D00218178 /* ChatRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CE520B8AA0D00218178 /* ChatRoom.swift */; };
 		364D2CE820B8AA0D00218178 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364D2CE620B8AA0D00218178 /* ChatMessage.swift */; };
 		364D2CEA20B8B12000218178 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 364D2CE920B8B12000218178 /* GoogleService-Info.plist */; };
 		36656E7220DADBEE004A775A /* ChatRoomWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36656E7120DADBEE004A775A /* ChatRoomWorker.swift */; };
@@ -51,6 +53,7 @@
 
 /* Begin PBXFileReference section */
 		33FFDB7E47E7E2F2F3473781 /* Pods_SBChatUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SBChatUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3618E8B120E02D010023E176 /* DispatchQueue+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extensions.swift"; sourceTree = "<group>"; };
 		361D7DC620B853DC00A694C8 /* SBChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SBChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		361D7DC920B853DC00A694C8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		361D7DD020B853DD00A694C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -62,10 +65,11 @@
 		361D7DE520B853DE00A694C8 /* SBChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SBChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		361D7DE920B853DE00A694C8 /* SBChatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBChatUITests.swift; sourceTree = "<group>"; };
 		361D7DEB20B853DE00A694C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		363EEE6E20FFD71C005A99DD /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
 		364D2CDA20B8A39400218178 /* FirebaseDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDriver.swift; sourceTree = "<group>"; };
 		364D2CDC20B8A3B200218178 /* ChatDriverProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDriverProtocol.swift; sourceTree = "<group>"; };
 		364D2CDF20B8A45000218178 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
-		364D2CE520B8AA0D00218178 /* ChatConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatConversation.swift; sourceTree = "<group>"; };
+		364D2CE520B8AA0D00218178 /* ChatRoom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatRoom.swift; sourceTree = "<group>"; };
 		364D2CE620B8AA0D00218178 /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		364D2CE920B8B12000218178 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		36656E7120DADBEE004A775A /* ChatRoomWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomWorker.swift; sourceTree = "<group>"; };
@@ -154,6 +158,7 @@
 		361D7DC820B853DC00A694C8 /* SBChat */ = {
 			isa = PBXGroup;
 			children = (
+				3618E8B120E02D010023E176 /* DispatchQueue+Extensions.swift */,
 				36656E7120DADBEE004A775A /* ChatRoomWorker.swift */,
 				36958A8520B894B800A55950 /* DesignUtils.swift */,
 				361D7DC920B853DC00A694C8 /* AppDelegate.swift */,
@@ -204,8 +209,9 @@
 		364D2CE420B8AA0D00218178 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				364D2CE520B8AA0D00218178 /* ChatConversation.swift */,
+				364D2CE520B8AA0D00218178 /* ChatRoom.swift */,
 				364D2CE620B8AA0D00218178 /* ChatMessage.swift */,
+				363EEE6E20FFD71C005A99DD /* ChatUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -454,17 +460,19 @@
 				36958A8620B894B800A55950 /* DesignUtils.swift in Sources */,
 				364D2CE820B8AA0D00218178 /* ChatMessage.swift in Sources */,
 				36656E7220DADBEE004A775A /* ChatRoomWorker.swift in Sources */,
+				3618E8B220E02D010023E176 /* DispatchQueue+Extensions.swift in Sources */,
 				364D2CDB20B8A39400218178 /* FirebaseDriver.swift in Sources */,
 				36DA709F20BDAE9D00DA675F /* ChatModels.swift in Sources */,
 				36DA709D20BDAE9D00DA675F /* ChatWorker.swift in Sources */,
 				36DA709E20BDAE9D00DA675F /* ChatRouter.swift in Sources */,
+				363EEE6F20FFD71C005A99DD /* ChatUser.swift in Sources */,
 				364D2CE020B8A45000218178 /* ConversationsViewController.swift in Sources */,
 				364D2CDD20B8A3B200218178 /* ChatDriverProtocol.swift in Sources */,
 				36DA70A120BDAE9D00DA675F /* ChatInteractor.swift in Sources */,
 				361D7DCA20B853DC00A694C8 /* AppDelegate.swift in Sources */,
 				36DA709C20BDAE9D00DA675F /* ChatPresenter.swift in Sources */,
 				36DA70A020BDAE9D00DA675F /* ChatViewController.swift in Sources */,
-				364D2CE720B8AA0D00218178 /* ChatConversation.swift in Sources */,
+				364D2CE720B8AA0D00218178 /* ChatRoom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
