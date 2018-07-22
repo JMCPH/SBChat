@@ -26,6 +26,9 @@
 		369ADF652104AC6300189734 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369ADF642104AC6300189734 /* Configuration.swift */; };
 		369ADF672104B8ED00189734 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369ADF662104B8ED00189734 /* ConversationTableViewCell.swift */; };
 		369ADF692104BB6500189734 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 369ADF682104BB6500189734 /* ConversationTableViewCell.xib */; };
+		369ADF6B2104FBE200189734 /* jakob.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 369ADF6A2104FBE200189734 /* jakob.jpg */; };
+		369ADF6D2104FBE600189734 /* robert.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 369ADF6C2104FBE600189734 /* robert.jpg */; };
+		369ADF6F2104FC1B00189734 /* avatar-placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 369ADF6E2104FC1B00189734 /* avatar-placeholder.png */; };
 		36DA709C20BDAE9D00DA675F /* ChatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA709620BDAE9D00DA675F /* ChatPresenter.swift */; };
 		36DA709D20BDAE9D00DA675F /* ChatWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA709720BDAE9D00DA675F /* ChatWorker.swift */; };
 		36DA709E20BDAE9D00DA675F /* ChatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36DA709820BDAE9D00DA675F /* ChatRouter.swift */; };
@@ -82,6 +85,9 @@
 		369ADF642104AC6300189734 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		369ADF662104B8ED00189734 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		369ADF682104BB6500189734 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
+		369ADF6A2104FBE200189734 /* jakob.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = jakob.jpg; sourceTree = "<group>"; };
+		369ADF6C2104FBE600189734 /* robert.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = robert.jpg; sourceTree = "<group>"; };
+		369ADF6E2104FC1B00189734 /* avatar-placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar-placeholder.png"; sourceTree = "<group>"; };
 		36DA709620BDAE9D00DA675F /* ChatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPresenter.swift; sourceTree = "<group>"; };
 		36DA709720BDAE9D00DA675F /* ChatWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWorker.swift; sourceTree = "<group>"; };
 		36DA709820BDAE9D00DA675F /* ChatRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRouter.swift; sourceTree = "<group>"; };
@@ -166,6 +172,9 @@
 		361D7DC820B853DC00A694C8 /* SBChat */ = {
 			isa = PBXGroup;
 			children = (
+				369ADF6E2104FC1B00189734 /* avatar-placeholder.png */,
+				369ADF6C2104FBE600189734 /* robert.jpg */,
+				369ADF6A2104FBE200189734 /* jakob.jpg */,
 				3618E8B120E02D010023E176 /* DispatchQueue+Extensions.swift */,
 				36958A8520B894B800A55950 /* DesignUtils.swift */,
 				361D7DC920B853DC00A694C8 /* AppDelegate.swift */,
@@ -346,9 +355,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				369ADF6F2104FC1B00189734 /* avatar-placeholder.png in Resources */,
+				369ADF6D2104FBE600189734 /* robert.jpg in Resources */,
 				369ADF692104BB6500189734 /* ConversationTableViewCell.xib in Resources */,
 				361D7DD420B853DD00A694C8 /* LaunchScreen.storyboard in Resources */,
 				36DA70A320BDB52300DA675F /* Documentation.md in Resources */,
+				369ADF6B2104FBE200189734 /* jakob.jpg in Resources */,
 				361D7DD120B853DD00A694C8 /* Assets.xcassets in Resources */,
 				364D2CEA20B8B12000218178 /* GoogleService-Info.plist in Resources */,
 			);

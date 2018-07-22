@@ -29,15 +29,15 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 
     // ChatRoom related
     fileprivate var room: ChatRoom!
-    fileprivate var currentUserID: String!
+    fileprivate var currentUser: ChatUser!
 
 
     // MARK: Object lifecycle
 
-    init(withRoom room: ChatRoom, currentUserID: String) {
+    init(withRoom room: ChatRoom, currentUser: ChatUser) {
         super.init(nibName: nil, bundle: nil)
         self.room = room
-        self.currentUserID = currentUserID
+        self.currentUser = currentUser
         self.setup()
     }
 
@@ -172,22 +172,18 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
     func fetchMessages()
     {
 
-        // Fetch messages on background thread
+        // Fetch messages on background thread - Display on main thread
         DispatchQueue.global(qos: .userInitiated).async {
-
-            let messages = [ChatMessage(text: "This is message 1", sender: Sender(id: "1", displayName: "Jakob"), messageId: "random", date: Date())]
-
-            // Display to UI on main thread
-            DispatchQueue.main.async {
-                self.messageList = messages
-                self.messagesCollectionView.reloadData()
-                self.messagesCollectionView.scrollToBottom()
-            }
-
+            ChatWorker().fetchMessages(forChatRoom: self.room, completion: { (messages, error) in
+                DispatchQueue.main.async {
+                    self.messageList = messages
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToBottom()
+                }
+            })
         }
 
     }
-
 
     func displaySendMessage(viewModel: Chat.Send.ViewModel) {
 
@@ -201,7 +197,7 @@ class ChatViewController: MessagesViewController, ChatDisplayLogic
 extension ChatViewController: MessagesDataSource {
 
     func currentSender() -> Sender {
-        return Sender(id: "1", displayName: "Jakob")
+        return Sender(id: currentUser.id, displayName: currentUser.name)
     }
 
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {

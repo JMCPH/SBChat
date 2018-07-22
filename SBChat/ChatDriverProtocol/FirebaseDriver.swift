@@ -32,7 +32,7 @@ class FirebaseDriver {
 
     public func fetchMessages(forChatRoom chatRoom: ChatRoom, completion: @escaping (_ messages: [ChatMessage]) -> Void) {
 
-        Configuration.chatsRoomRef.child(chatRoom.id).queryOrdered(byChild: "timestamp").queryOrderedByValue().observeSingleEvent(of: .value) { (snapshot) in
+        Configuration.chatsRoomRef.child(chatRoom.id).queryOrdered(byChild: "timestamp").observeSingleEvent(of: .value) { (snapshot) in
 
             var messages = [ChatMessage]()
             for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {

@@ -13,8 +13,8 @@ class ConversationsViewController: UITableViewController {
 
     let worker = ConversationsWorker()
     var recentMessages: [ChatRecentMessage]?
-    var currentUser: ChatUser = ChatUser(withID: "1", name: "1", imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(1).jpg")
-    var allUserIDs = ["1", "2", "3", "4", "5"]
+    var currentUser: ChatUser = ChatUser(withID: "Jakob Pipenbring Mikkelsen", name: "Jakob Pipenbring Mikkelsen", imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(1).jpg")
+    var allUserIDs = ["Jakob Pipenbring Mikkelsen", "Robert Husum Sand", "Kasper Mortensen", "Joachim Christensen"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +32,6 @@ class ConversationsViewController: UITableViewController {
         tableView.estimatedRowHeight = 60
         tableView.separatorStyle = .none
 
-        fetchRecentMessages(forUserID: currentUser.id)
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -77,16 +75,12 @@ class ConversationsViewController: UITableViewController {
                     return
                 }
 
-                // Open the ChatRoomVC with roomID
-                DispatchQueue.main(delay: 0.0, main: {
-                    if let strongSelf = self {
-                        let users = [strongSelf.currentUser,
-                                     ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")]
-                        let chatRoom = ChatRoom(withID: chatRoomID, users: users)
-                        strongSelf.openChatRoom(withID: chatRoom)
-
-                    }
-                }, completion: nil)
+                if let strongSelf = self {
+                    let users = [strongSelf.currentUser,
+                                 ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")]
+                    let chatRoom = ChatRoom(withID: chatRoomID, users: users)
+                    strongSelf.openChatRoom(withID: chatRoom)
+                }
 
             }
             alert.addAction(action)
@@ -96,10 +90,13 @@ class ConversationsViewController: UITableViewController {
 
     }
 
+    // Open the ChatRoomVC with room
     fileprivate func openChatRoom(withID chatRoom: ChatRoom) {
-        debugPrint("Open a ChatViewController with RoomID: \(chatRoom.id)")
-        let chatVC = ChatViewController(withRoom: chatRoom, currentUserID: currentUser.id)
-        self.navigationController?.pushViewController(chatVC, animated: true)
+        DispatchQueue.main(delay: 0.0, main: {
+            let chatVC = ChatViewController(withRoom: chatRoom, currentUser: self.currentUser)
+            self.navigationController?.pushViewController(chatVC, animated: true)
+        }, completion: nil)
+
     }
 
     fileprivate func fetchRecentMessages(forUserID userID: String) {
@@ -109,6 +106,7 @@ class ConversationsViewController: UITableViewController {
             self.recentMessages = recentMessages
             self.tableView.reloadData()
         }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -131,13 +129,32 @@ class ConversationsViewController: UITableViewController {
 
         // Configure the cell...
         guard let recentMessage = recentMessages?[indexPath.row] else { return cell }
-        cell.usernameLabel.text = "UserID: " + recentMessage.senderUsername
+        cell.usernameLabel.text = recentMessage.senderUsername
         cell.messageLabel.text = recentMessage.latestMessage
         cell.timeLabel.text = recentMessage.timestamp
 
         // Load image from URL - round corners
-        guard let imageURL = URL(string: recentMessage.senderUserImageURL) else { return cell }
-        cell.userImageView.downloadedFrom(url: imageURL)
+        //guard let imageURL = URL(string: recentMessage.senderUserImageURL) else { return cell }
+
+        if currentUser.name == "Jakob Pipenbring Mikkelsen" {
+            if recentMessage.senderUsername == "Jakob Pipenbring Mikkelsen" {
+                cell.userImageView.image = UIImage(named: "robert.jpg")
+            } else if recentMessage.senderUsername == "Robert Husum Sand" {
+                cell.userImageView.image = UIImage(named: "robert.jpg")
+            } else {
+                cell.userImageView.image = UIImage(named: "avatar-placeholder")
+                //cell.userImageView.downloadedFrom(url: imageURL)
+            }
+        } else if currentUser.name == "Robert Husum Sand" {
+            if recentMessage.senderUsername == "Jakob Pipenbring Mikkelsen" {
+                cell.userImageView.image = UIImage(named: "jakob.jpg")
+            } else if recentMessage.senderUsername == "Robert Husum Sand" {
+                cell.userImageView.image = UIImage(named: "jakob.jpg")
+            } else {
+                cell.userImageView.image = UIImage(named: "avatar-placeholder")
+                //cell.userImageView.downloadedFrom(url: imageURL)
+            }
+        }
         cell.userImageView.layer.cornerRadius = cell.userImageView.frame.height / 2
         cell.userImageView.clipsToBounds = true
 
@@ -156,6 +173,8 @@ class ConversationsViewController: UITableViewController {
             let users = [currentUser, ChatUser(withID: recentMessage.senderUserID, name: recentMessage.senderUsername, imageURL: recentMessage.senderUserImageURL)]
             let chatRoom = ChatRoom(withID: recentMessage.roomID, users: users)
             self.openChatRoom(withID: chatRoom)
+        } else {
+            debugPrint("Error - can't open chatroom...")
         }
 
     }
