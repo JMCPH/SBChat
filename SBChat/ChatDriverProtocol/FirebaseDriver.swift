@@ -12,34 +12,42 @@ import FirebaseDatabase
 
 class FirebaseDriver {
 
-    var chatRoomsRef = Database.database().reference().child("chat").child("rooms")
-    var chatRecentsRef = Database.database().reference().child("chat").child("recentMessages")
+    public func fetchRecentMessages(forUserID userID: String, onCompletion: @escaping (_ recentMessages: [ChatRecentMessage]) -> Void) {
 
-    public func fetchChatConversationsForUserID(userID: String, onSucces: @escaping ([ChatRoom]) -> Void, onError: Error?) {
+        Configuration.recentMessagesRef.queryOrdered(byChild: "userID").queryEqual(toValue: userID).observeSingleEvent(of: .value) { (snapshot) in
 
-        chatRoomsRef.queryStarting(atValue: userID).observeSingleEvent(of: .value) { (snapshot) in
-            print(snapshot.children.allObjects)
-        }
+            var recentMessages = [ChatRecentMessage]()
+            for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {
+                if let value = child.value as? [String: AnyObject] {
+                    let recentMessage = ChatRecentMessage(withSnapshotValue: value)
+                    recentMessages.append(recentMessage)
+                }
+            }
 
-        chatRoomsRef.queryEnding(atValue: userID).observeSingleEvent(of: .value) { (snapshot) in
-            print(snapshot.children.allObjects)
+            onCompletion(recentMessages)
+
         }
 
     }
 
-    /*
-    public func createChatRoom(withUserIDs userIDs: [String], withMessage message: ChatMessage, completion: @escaping (_ success: Error?) -> Void) {
+    public func fetchMessages(forChatRoom chatRoom: ChatRoom, completion: @escaping (_ messages: [ChatMessage]) -> Void) {
 
-        let chatRoomData = ["members": userIDs,
-                            "lastMessage": message,
-                            "lastMessageSent": message.sentDate.timeIntervalSince1970] as [String : Any]
+        Configuration.chatsRoomRef.child(chatRoom.id).queryOrdered(byChild: "timestamp").queryOrderedByValue().observeSingleEvent(of: .value) { (snapshot) in
 
-        // Send chat room to firebase
-        chatRoomsRef.childByAutoId().updateChildValues(chatRoomData) { (error, ref) in
-            completion(error)
+            var messages = [ChatMessage]()
+            for child in snapshot.children.allObjects as? [DataSnapshot] ?? [] {
+                if let snapshotValue = child.value as? [String: AnyObject] {
+
+                    let chatMessage = ChatMessage(text: snapshotValue["value"] as! String, sender: Sender(id: snapshotValue["senderID"] as! String, displayName: snapshotValue["senderName"] as! String), messageId: child.key, date: Date(timeIntervalSince1970: snapshotValue["timestamp"] as! Double / 1000))
+
+                    messages.append(chatMessage)
+                }
+            }
+            completion(messages)
         }
-    } */
-    
+
+    }
+
     public func sendMessage(message: ChatMessage, forChatRoom chatRoom: ChatRoom, completion: @escaping (_ error: Error?) -> Void) {
 
         switch message.kind {
@@ -53,7 +61,7 @@ class FirebaseDriver {
                                     "timestamp": message.sentDate.timeIntervalSince1970,
                                     "type" : "text",
                                     "value" : value] as [String : Any]
-                chatRoomsRef.child(chatRoom.id).childByAutoId().setValue(messageValue) { [weak self] (error, ref) in
+                Configuration.chatsRoomRef.child(chatRoom.id).childByAutoId().setValue(messageValue) { [weak self] (error, ref) in
                     if let err = error {
                         completion(err)
                         return
@@ -62,7 +70,6 @@ class FirebaseDriver {
                     // 2. Update the recentMessages for ALL members of the chat
                     self?.updateRecentMessages(forChatRoom: chatRoom, messageText: value, senderID: message.sender.id)
 
-                    // 3. Send out push notifications to everyone
                 }
 
         default:
@@ -80,22 +87,27 @@ class FirebaseDriver {
             // Update the recentMessage
             let latestMessage = ["timestamp": ServerValue.timestamp() as Any,
                                  "latestMessage" : messageText,
-                                 "lastSenderID": senderID,
+                                 "latestSenderID": senderID,
                                  "userID": user.id,
                                  "roomID": chatRoom.id,
-                                 "otherUsername": otherUser.name,
-                                 "otherUserID": otherUser.id,
-                                 "otherUserImageURL": otherUser.imageURL] as [String : Any]
+                                 "userID_roomID": user.id+chatRoom.id,
+                                 "senderUsername": otherUser.name,
+                                 "senderUserID": otherUser.id,
+                                 "senderUserImageURL": otherUser.imageURL] as [String : Any]
 
-            chatRecentsRef.queryOrdered(byChild: "userID").queryEqual(toValue: user.id).observeSingleEvent(of: .value) { [weak self] (snapshot) in
+            Configuration.recentMessagesRef.queryOrdered(byChild: "userID_roomID").queryEqual(toValue: user.id+chatRoom.id).observeSingleEvent(of: .value) { (snapshot) in
 
+                // If already existing - use the path
                 if let childValue = snapshot.value as? [String: Any], let path = childValue.keys.first {
-                    self?.chatRecentsRef.child(path).updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
+                    Configuration.recentMessagesRef.child(path).updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
 
                     })
-                } else {
-                    self?.chatRecentsRef.childByAutoId().updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
-                        ref.updateChildValues(["recentID" : ref.key])
+                }
+
+                // Else use the childByAutoId() path
+                else {
+                    Configuration.recentMessagesRef.childByAutoId().updateChildValues(latestMessage, withCompletionBlock: { (error, ref) in
+
                     })
                 }
 

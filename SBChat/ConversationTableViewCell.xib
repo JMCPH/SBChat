@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" restorationIdentifier="cell" id="iN0-l3-epB" customClass="ConversationTableViewCell" customModule="SBChat" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blo-Nb-zHP">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="B7Q-tQ-79j">
+                            <rect key="frame" x="8" y="10" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="dqq-Qn-MIC"/>
+                                <constraint firstAttribute="width" constant="40" id="rt1-sc-ofE"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="60 minutes" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fi7-VL-3Fg">
+                            <rect key="frame" x="303" y="8" width="64" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="64" id="UsP-nE-xES"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.93154329059999996" green="0.22805699709999999" blue="0.33684092760000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jakob Pipenbring Mikkelsen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="knR-KL-L4t">
+                            <rect key="frame" x="56" y="8" width="239" height="19"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MmS-Dd-ceJ">
+                            <rect key="frame" x="56" y="27" width="311" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="25" id="Emf-OP-nDb"/>
+                            </constraints>
+                            <string key="text">Jakob Pipenbring Mikkelsen
+Jakob Pipenbring Mikkelsen</string>
+                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                            <color key="textColor" red="0.37055522200000002" green="0.37056469920000001" blue="0.37055957319999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="knR-KL-L4t" firstAttribute="leading" secondItem="B7Q-tQ-79j" secondAttribute="trailing" constant="8" symbolic="YES" id="CAy-tv-XUS"/>
+                        <constraint firstItem="B7Q-tQ-79j" firstAttribute="top" secondItem="blo-Nb-zHP" secondAttribute="top" constant="10" id="IvD-z0-loM"/>
+                        <constraint firstItem="Fi7-VL-3Fg" firstAttribute="leading" secondItem="knR-KL-L4t" secondAttribute="trailing" constant="8" symbolic="YES" id="JRi-TW-sfZ"/>
+                        <constraint firstItem="Fi7-VL-3Fg" firstAttribute="top" secondItem="blo-Nb-zHP" secondAttribute="top" constant="8" id="X3o-eW-xb9"/>
+                        <constraint firstItem="MmS-Dd-ceJ" firstAttribute="top" secondItem="knR-KL-L4t" secondAttribute="bottom" id="aqw-dj-ovL"/>
+                        <constraint firstItem="knR-KL-L4t" firstAttribute="top" secondItem="Fi7-VL-3Fg" secondAttribute="top" id="dnl-6i-bJn"/>
+                        <constraint firstItem="MmS-Dd-ceJ" firstAttribute="trailing" secondItem="Fi7-VL-3Fg" secondAttribute="trailing" id="kLg-JK-CWf"/>
+                        <constraint firstItem="MmS-Dd-ceJ" firstAttribute="bottom" secondItem="blo-Nb-zHP" secondAttribute="bottomMargin" id="lEB-BF-26d"/>
+                        <constraint firstAttribute="trailing" secondItem="Fi7-VL-3Fg" secondAttribute="trailing" constant="8" id="uGd-eE-9Iq"/>
+                        <constraint firstItem="B7Q-tQ-79j" firstAttribute="leading" secondItem="blo-Nb-zHP" secondAttribute="leading" constant="8" id="ueI-9G-1pw"/>
+                        <constraint firstItem="knR-KL-L4t" firstAttribute="leading" secondItem="MmS-Dd-ceJ" secondAttribute="leading" id="ukl-8R-bFG"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="blo-Nb-zHP" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="A9N-rV-pHh"/>
+                <constraint firstItem="blo-Nb-zHP" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="aEK-54-SdP"/>
+                <constraint firstItem="blo-Nb-zHP" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="kmX-Oj-s4e"/>
+                <constraint firstItem="blo-Nb-zHP" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="z3D-SN-yEZ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="messageLabel" destination="MmS-Dd-ceJ" id="YwB-Xf-a5r"/>
+                <outlet property="timeLabel" destination="Fi7-VL-3Fg" id="bdi-3S-ZDn"/>
+                <outlet property="userImageView" destination="B7Q-tQ-79j" id="TMe-CL-Ini"/>
+                <outlet property="usernameLabel" destination="knR-KL-L4t" id="Iiq-DW-FxH"/>
+            </connections>
+            <point key="canvasLocation" x="286.5" y="-210"/>
+        </view>
+    </objects>
+</document>

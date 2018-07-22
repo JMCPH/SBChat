@@ -27,6 +27,7 @@ class ChatWorker {
     /// Fetch messages for roomID
     func fetchMessages(forRoomID roomID: String, completion: @escaping (_ chatMessages: [ChatMessage], _ error: Error?) -> Void) {
 
+        currentDriver
     }
 
 }

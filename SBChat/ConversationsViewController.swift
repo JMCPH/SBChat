@@ -11,8 +11,9 @@ import FirebaseDatabase
 
 class ConversationsViewController: UITableViewController {
 
-    let chatRoomWorker = ChatRoomWorker()
-    var currentUserID: String = "1"
+    let worker = ConversationsWorker()
+    var recentMessages: [ChatRecentMessage]?
+    var currentUser: ChatUser = ChatUser(withID: "1", name: "1", imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(1).jpg")
     var allUserIDs = ["1", "2", "3", "4", "5"]
 
     override func viewDidLoad() {
@@ -23,15 +24,22 @@ class ConversationsViewController: UITableViewController {
                                              animated: false)
         self.navigationItem.setRightBarButton(UIBarButtonItem(title:"Change user", style:.plain, target:self, action: #selector(changeUserID)),
                                              animated: false)
-        self.title = "User: \(currentUserID)"
+        self.title = "User: \(currentUser.id)"
 
         // TableView Design
+        tableView.register(UINib(nibName: "ConversationTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         tableView.tableFooterView = UIView(frame: .zero)
-        clearsSelectionOnViewWillAppear = false
+        tableView.estimatedRowHeight = 60
+        tableView.separatorStyle = .none
 
-        // Fetch conversations for userID
-        fetchConversations(forUserID: currentUserID)
+        fetchRecentMessages(forUserID: currentUser.id)
         
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        fetchRecentMessages(forUserID: currentUser.id)
     }
 
     // Change ID of the current user
@@ -41,9 +49,9 @@ class ConversationsViewController: UITableViewController {
         for userID in allUserIDs {
             let action = UIAlertAction(title: userID, style: .default) { [weak self] (action) in
                 guard let selectedUserID = action.title else { return }
-                self?.currentUserID =  selectedUserID
+                self?.currentUser = ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")
                 self?.title = "User: \(selectedUserID)"
-                self?.fetchConversations(forUserID: selectedUserID)
+                self?.fetchRecentMessages(forUserID: selectedUserID)
             }
             alert.addAction(action)
         }
@@ -60,21 +68,24 @@ class ConversationsViewController: UITableViewController {
 
             let action = UIAlertAction(title: userID, style: .default) { [weak self] (action) in
                 guard let selectedUserID = action.title else { return }
-                guard let currentUserID = self?.currentUserID else { return }
+                guard let currentUserID = self?.currentUser.id else { return }
                 guard currentUserID != selectedUserID else { return }
 
                 // Generate the ChatRoomID for the two users
-                guard let chatRoomID = self?.chatRoomWorker.generateChatRoomID(withUserID: selectedUserID, currentUserID: currentUserID) else {
+                guard let chatRoomID = self?.worker.generateChatRoomID(withUserID: selectedUserID, currentUserID: currentUserID) else {
                     debugPrint("Error - Can't chat with the same user!")
                     return
                 }
 
                 // Open the ChatRoomVC with roomID
                 DispatchQueue.main(delay: 0.0, main: {
-                    let users = [ChatUser(withID: currentUserID, name: currentUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(currentUserID).jpg"),
-                                 ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")]
-                    let chatRoom = ChatRoom(withID: chatRoomID, users: users)
-                    self?.openChatRoom(withID: chatRoom)
+                    if let strongSelf = self {
+                        let users = [strongSelf.currentUser,
+                                     ChatUser(withID: selectedUserID, name: selectedUserID, imageURL: "https://blognumbers.files.wordpress.com/2010/09/\(selectedUserID).jpg")]
+                        let chatRoom = ChatRoom(withID: chatRoomID, users: users)
+                        strongSelf.openChatRoom(withID: chatRoom)
+
+                    }
                 }, completion: nil)
 
             }
@@ -87,16 +98,17 @@ class ConversationsViewController: UITableViewController {
 
     fileprivate func openChatRoom(withID chatRoom: ChatRoom) {
         debugPrint("Open a ChatViewController with RoomID: \(chatRoom.id)")
-        let chatVC = ChatViewController(withRoom: chatRoom, currentUserID: currentUserID)
+        let chatVC = ChatViewController(withRoom: chatRoom, currentUserID: currentUser.id)
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 
-    fileprivate func fetchConversations(forUserID userID: String) {
+    fileprivate func fetchRecentMessages(forUserID userID: String) {
 
-        // Loading conversations from this userID
-
-        
-
+        // Fetch conversations from this userID
+        worker.fetchRecentMessages(forUserID: userID) { (recentMessages)  in
+            self.recentMessages = recentMessages
+            self.tableView.reloadData()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -107,68 +119,45 @@ class ConversationsViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return recentMessages?.count ?? 0
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ConversationTableViewCell
 
         // Configure the cell...
+        guard let recentMessage = recentMessages?[indexPath.row] else { return cell }
+        cell.usernameLabel.text = "UserID: " + recentMessage.senderUsername
+        cell.messageLabel.text = recentMessage.latestMessage
+        cell.timeLabel.text = recentMessage.timestamp
+
+        // Load image from URL - round corners
+        guard let imageURL = URL(string: recentMessage.senderUserImageURL) else { return cell }
+        cell.userImageView.downloadedFrom(url: imageURL)
+        cell.userImageView.layer.cornerRadius = cell.userImageView.frame.height / 2
+        cell.userImageView.clipsToBounds = true
 
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        // Open the ChatRoomVC with roomID and users
+        if let recentMessage = recentMessages?[indexPath.row] {
+            let users = [currentUser, ChatUser(withID: recentMessage.senderUserID, name: recentMessage.senderUsername, imageURL: recentMessage.senderUserImageURL)]
+            let chatRoom = ChatRoom(withID: recentMessage.roomID, users: users)
+            self.openChatRoom(withID: chatRoom)
+        }
 
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

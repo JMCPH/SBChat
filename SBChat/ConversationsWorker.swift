@@ -9,19 +9,16 @@
 import UIKit
 import FirebaseDatabase
 
-class ChatRoomWorker {
+class ConversationsWorker {
 
-    let chatRoomsRef = Database.database().reference().child("Chat").child("Rooms")
-
+    let currentDriver = FirebaseDriver()
 
     // Fetch messages for ChatRoom with roomID
-    public func fetchMessages(forRoomID roomID: String, withPagination page: Int, withCompletion completion: @escaping (_ exists:Bool, _ messages:[ChatMessage]?) -> Void)
-    {
-        // Fetch all messages within this roomID
-        // --- TODO: Do it in pagination later on --
-        chatRoomsRef.child(roomID).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-        })
+    public func fetchRecentMessages(forUserID userID: String, withCompletion completion: @escaping (_ recentMessages:[ChatRecentMessage]?) -> Void)    {
+        currentDriver.fetchRecentMessages(forUserID: userID) { (recentMessages) in
+            // Sort as the newest messages appears first
+            completion(recentMessages.sorted(by: { $0.timestamp > $1.timestamp }))
+        }
 
     }
 
@@ -50,26 +47,10 @@ class ChatRoomWorker {
     public func isChatRoomValid(withRoomID roomID: String, completion: @escaping (Bool) -> ()) {
 
         // Check if ChatRoom with an ID already exists
-        chatRoomsRef.child(roomID).observeSingleEvent(of: .value, with: { (snapshot) in
+        Configuration.chatsRoomRef.child(roomID).observeSingleEvent(of: .value, with: { (snapshot) in
             completion(snapshot.exists())
         })
 
     }
-
-    /*
-    /// Create ChatRoom with ID
-    ///
-    /// - Parameters:
-    ///   - roomID: The id of the chatroom
-    ///   - completion: boolean indicating if chatroom exists
-    public func createChatRoom(withRoomID roomID: String, firstMessage: String, completion: @escaping (_ error: Error?, _ success: Bool) -> ()) {
-
-        // Check if ChatRoom with an ID already exists
-        chatRoomsRef.child(<#T##pathString: String##String#>).setValue(<#T##value: Any?##Any?#>) { (error, ref) in
-
-            completion(completion)
-        }
-
-    } */
 
 }
